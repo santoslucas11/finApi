@@ -1,3 +1,4 @@
+const { json } = require("express");
 const express = require("express");
 const { v4: uuidv4 } = require("uuid")
 
@@ -27,5 +28,17 @@ app.post("/account", (request, response) => {
 
     return response.status(201).send();
 })
+
+app.get("/extrato", (request, response) => {
+    const { cpf } = request.headers;
+
+    const customer = customers.find(customer => customer.cpf === cpf);
+
+    if (!customer) {
+        return response.status(404).json({ error: "customer not found" });
+    }
+
+    return response.json(customer.statement);
+});
 
 app.listen(3333);
